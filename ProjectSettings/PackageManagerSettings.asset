@@ -47,7 +47,13 @@ MonoBehaviour:
     m_Modified: 0
     m_ErrorMessage: 
     m_UserModificationsEntityId:
+<<<<<<< HEAD
       m_Data: -938
     m_OriginalEntityId:
       m_Data: -940
+=======
+      m_Data: -918
+    m_OriginalEntityId:
+      m_Data: -920
+>>>>>>> 9a75494e4178aeb6619df52ffb179a4b9f6e4eb2
   m_LoadAssets: 0
