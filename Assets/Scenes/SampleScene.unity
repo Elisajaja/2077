@@ -297,12 +297,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: -10}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 156.71, y: 1.805838, z: 319.18}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1418677935}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &330585547
 MonoBehaviour:
@@ -540,8 +540,20 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 9119986ea754d0b468fd0774108a5273,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 330585546}
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 9119986ea754d0b468fd0774108a5273,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1418677934}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 9119986ea754d0b468fd0774108a5273,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1418677936}
   m_SourcePrefab: {fileID: 100100000, guid: 9119986ea754d0b468fd0774108a5273, type: 3}
 --- !u!1 &699449874
 GameObject:
@@ -685,6 +697,48 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1418677933 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 9119986ea754d0b468fd0774108a5273,
+    type: 3}
+  m_PrefabInstance: {fileID: 655585494}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1418677934
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1418677933}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0d52bbc52d4f464d8f1a6f8df88e94a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::persobouge
+  vitesse: 10
+  sensibiliteX: 1
+  forcesaut: 1000
+  fakegravity: 0
+  animator: {fileID: 0}
+  corps: {fileID: 1418677935}
+--- !u!4 &1418677935 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 9119986ea754d0b468fd0774108a5273,
+    type: 3}
+  m_PrefabInstance: {fileID: 655585494}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1418677936
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1418677933}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 087936958ca6969469cf88a9fba026ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
 --- !u!1001 &2014698078
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -855,7 +909,6 @@ PrefabInstance:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
-  - {fileID: 330585546}
   - {fileID: 410087041}
   - {fileID: 832575519}
   - {fileID: 699449877}
