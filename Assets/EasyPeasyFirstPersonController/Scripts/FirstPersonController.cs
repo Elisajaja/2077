@@ -54,10 +54,10 @@ namespace EasyPeasyFirstPersonController
         private float originalCamY;
 
         [Header("Height Settings")]
-        public float standingCameraHeight = 1.75f;
+        public float standingCameraHeight = 3f;
         public float crouchingCameraHeight = 1f;
         public float crouchingCharacterControllerHeight = 1f;
-        [HideInInspector] public float standingCharacterControllerHeight = 1.8f;
+        [HideInInspector] public float standingCharacterControllerHeight = 3f;
         [HideInInspector] public Vector3 standingCharacterControllerCenter = new Vector3(0, 0.9f, 0);
         [HideInInspector] public float targetCameraY;
 
