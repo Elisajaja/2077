@@ -15,6 +15,11 @@ namespace EasyPeasyFirstPersonController
         public float mouseSensitivity = 2f;
         public float strafeTiltAmount = 2f;
 
+        [Header("Camera Settings")]
+        public bool useThirdPerson = true;
+        public float cameraDistance = 3f;
+        public float cameraHeightOffset = 0.5f;
+
         [Header("References")]
         public Transform playerCamera;
         public Transform cameraParent;
@@ -31,6 +36,7 @@ namespace EasyPeasyFirstPersonController
         private float xRotation = 0f;
         private float currentTilt;
         private float tiltVelocity;
+        private float cameraYaw = 0f;
 
         public PlayerBaseState CurrentState { get => currentState; set => currentState = value; }
 
@@ -95,6 +101,15 @@ namespace EasyPeasyFirstPersonController
             targetCameraY = standingCameraHeight;
             originalCamY = standingCameraHeight;
 
+            if (useThirdPerson && cameraParent != null)
+            {
+                cameraYaw = 0f;
+                cameraParent.localPosition = new Vector3(0f, originalCamY + cameraHeightOffset, 0f);
+                cameraParent.localRotation = Quaternion.identity;
+                playerCamera.localPosition = new Vector3(0f, 0f, 0f);
+                playerCamera.localRotation = Quaternion.identity;
+            }
+
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
 
@@ -114,6 +129,14 @@ namespace EasyPeasyFirstPersonController
 
             currentState.UpdateState();
             HandleRotation();
+            
+            // Rotate player towards camera direction when moving in third-person
+            if (useThirdPerson && characterController.velocity.magnitude > 0.1f && isGrounded)
+            {
+                Quaternion targetRotation = Quaternion.Euler(0f, cameraYaw, 0f);
+                transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, Time.deltaTime * 8f);
+            }
+            
             UpdateVisuals();
         }
 
@@ -122,16 +145,24 @@ namespace EasyPeasyFirstPersonController
             float mouseX = input.lookInput.x * mouseSensitivity;
             float mouseY = input.lookInput.y * mouseSensitivity;
 
-            transform.Rotate(Vector3.up * mouseX);
-
-            xRotation -= mouseY;
-            xRotation = Mathf.Clamp(xRotation, -90f, 90f);
-
             float strafeTilt = useCameraTilt ? (-input.moveInput.x * strafeTiltAmount) : 0;
             float combinedTargetTilt = (useCameraTilt ? targetTilt : 0) + strafeTilt;
-
             currentTilt = Mathf.SmoothDamp(currentTilt, combinedTargetTilt, ref tiltVelocity, 0.1f);
-            playerCamera.localRotation = Quaternion.Euler(xRotation, 0, currentTilt);
+
+            if (useThirdPerson)
+            {
+                cameraYaw -= mouseX;
+                cameraParent.localRotation = Quaternion.Euler(0f, cameraYaw, 0f);
+                playerCamera.localRotation = Quaternion.Euler(0f, 180f, currentTilt);
+            }
+            else
+            {
+                transform.Rotate(Vector3.up * mouseX);
+
+                xRotation -= mouseY;
+                xRotation = Mathf.Clamp(xRotation, -90f, 90f);
+                playerCamera.localRotation = Quaternion.Euler(xRotation, 0, currentTilt);
+            }
         }
 
         public void UpdateVisuals()
@@ -143,18 +174,43 @@ namespace EasyPeasyFirstPersonController
             cam.fieldOfView = Mathf.SmoothDamp(cam.fieldOfView, targetFov, ref fovVelocity, 1f / fovChangeSpeed);
 
             landingMomentum = Mathf.Lerp(landingMomentum, 0, Time.deltaTime * 10f);
-            float newY = Mathf.Lerp(cameraParent.localPosition.y, targetCameraY, Time.deltaTime * 8f);
+            float newY = Mathf.Lerp(cameraParent.localPosition.y, targetCameraY + cameraHeightOffset, Time.deltaTime * 8f);
 
-            if (useHeadBob && characterController.velocity.magnitude > 0.1f && isGrounded)
+            if (useThirdPerson)
             {
-                bobTimer += Time.deltaTime * currentBobSpeed;
-                float bobOffset = Mathf.Sin(bobTimer) * currentBobIntensity;
-                cameraParent.localPosition = new Vector3(cameraParent.localPosition.x, newY + bobOffset, cameraParent.localPosition.z);
+                float bobOffset = 0f;
+                if (useHeadBob && characterController.velocity.magnitude > 0.1f && isGrounded)
+                {
+                    bobTimer += Time.deltaTime * currentBobSpeed;
+                    bobOffset = Mathf.Sin(bobTimer) * currentBobIntensity;
+                }
+                else
+                {
+                    bobTimer = 0;
+                }
+
+                // Position orbit
+                float orbitX = Mathf.Sin(cameraYaw * Mathf.Deg2Rad) * cameraDistance;
+                float orbitZ = -Mathf.Cos(cameraYaw * Mathf.Deg2Rad) * cameraDistance;
+                cameraParent.localPosition = new Vector3(orbitX, newY + bobOffset, orbitZ);
+
+                // Look at player center
+                Vector3 lookTarget = transform.position + Vector3.up * (originalCamY + cameraHeightOffset * 0.5f);
+                playerCamera.LookAt(lookTarget);
             }
             else
             {
-                bobTimer = 0;
-                cameraParent.localPosition = new Vector3(cameraParent.localPosition.x, newY, cameraParent.localPosition.z);
+                if (useHeadBob && characterController.velocity.magnitude > 0.1f && isGrounded)
+                {
+                    bobTimer += Time.deltaTime * currentBobSpeed;
+                    float bobOffset = Mathf.Sin(bobTimer) * currentBobIntensity;
+                    cameraParent.localPosition = new Vector3(0f, newY + bobOffset, 0f);
+                }
+                else
+                {
+                    bobTimer = 0;
+                    cameraParent.localPosition = new Vector3(0f, newY, 0f);
+                }
             }
         }
         public bool HasCeiling()
